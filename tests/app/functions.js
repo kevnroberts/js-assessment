@@ -5,14 +5,22 @@ define([
   'use!underscore',
   'app/functions'
 ], function(_, answers) {
+
   describe("functions", function() {
+    var sayItCalled = false;
     var sayIt = function(greeting, name, punctuation) {
+          sayItCalled = true;
           return greeting + ', ' + name + (punctuation || '!');
         };
 
+    beforeEach(function () {
+      sayItCalled = false;
+    });
+
     it("you should be able to use an array as arguments when calling a function", function() {
-      var result = answers.argsAsArray([ 'Hello', 'Ellie', '!' ]);
+      var result = answers.argsAsArray(sayIt, [ 'Hello', 'Ellie', '!' ]);
       expect(result).to.be('Hello, Ellie!');
+      expect(sayItCalled).to.be.ok();
     });
 
     it("you should be able to change the context in which a function is called", function() {
@@ -24,21 +32,34 @@ define([
             name : 'Rebecca'
           };
 
-      // define a function for fn that calls the speak function such that the
-      // following test will pass
       var result = answers.speak(speak, obj);
       expect(result).to.be('Hello, Rebecca!!!');
+      expect(sayItCalled).to.be.ok();
     });
 
     it("you should be able to return a function from a function", function() {
-      // define a function for fn so that the following will pass
       expect(answers.functionFunction('Hello')('world')).to.be('Hello, world');
+      expect(answers.functionFunction('Hai')('can i haz funxtion?')).to.be('Hai, can i haz funxtion?');
+    });
+
+    it('you should be able to use closures', function () {
+      var arr = [ Math.random(), Math.random(), Math.random(), Math.random() ];
+      var doSomeStuff;
+
+      doSomeStuff = function (x) { return x * x; };
+
+      var funcs = answers.makeClosures(arr, doSomeStuff);
+      expect(funcs).to.have.length(arr.length);
+
+      for (var i = 0; i < arr.length; i++) {
+        expect(funcs[i]()).to.be(doSomeStuff(arr[i]));
+      }
     });
 
     it("you should be able to create a 'partial' function", function() {
-      // define a function for fn so that the following will pass
       var partial = answers.partial(sayIt, 'Hello', 'Ellie');
       expect(partial('!!!')).to.be('Hello, Ellie!!!');
+      expect(sayItCalled).to.be.ok();
     });
 
     it("you should be able to use arguments", function () {
@@ -53,7 +74,7 @@ define([
       expect(answers.useArguments(a, b, c, d)).to.be(a + b + c + d);
     });
 
-    it("you should be able to apply functions", function () {
+    it("you should be able to apply functions with arbitrary numbers of arguments", function () {
       (function () {
         var a = Math.random(), b = Math.random(), c = Math.random();
 
@@ -94,22 +115,7 @@ define([
       expect(answers.curryIt(curryMe, a)(b, c)).to.be(curryMe(a, b, c));
       expect(answers.curryIt(curryMe, a, b)(c)).to.be(curryMe(a, b, c));
       expect(answers.curryIt(curryMe, a, b, c)()).to.be(curryMe(a, b, c));
-      expect(answers.curryIt(curryMe, a, b, c)()).to.be(curryMe(a, b, c));
       expect(answers.curryIt(curryMe, b, a, c)()).to.be(curryMe(b, a, c));
-    });
-
-    it('you should be able to use closures', function () {
-      var arr = [ Math.random(), Math.random(), Math.random(), Math.random() ];
-      var doSomeStuff;
-
-      doSomeStuff = function (x) { return x * x; };
-
-      var funcs = answers.makeClosures(arr, doSomeStuff);
-      expect(funcs).to.have.length(arr.length);
-
-      _.each(funcs, function(func, i) {
-        expect(funcs[i]()).to.be(doSomeStuff(arr[i]));
-      });
     });
   });
 });

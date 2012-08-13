@@ -2,14 +2,28 @@ define([
   'app/async'
 ], function(answers) {
   describe("async behavior", function() {
-    it("you should understand how to uses 'promises'", function(done) {
+    it("you should understand how to use 'promises' to handle asynchronicity", function(done) {
       var flag = false;
+      var finished = 0;
+      var total = 2;
 
-      answers.async().then(function(result) {
+      function finish(done) {
+        if (++finished == total) { done(); }
+      }
+
+      answers.async(true).then(function(result) {
         flag = result;
         expect(flag).to.be(true);
-        done();
+        finish(done);
       });
+
+      answers.async('success').then(function(result) {
+        flag = result;
+        expect(flag).to.be('success');
+        finish(done);
+      });
+
+      expect(flag).to.be(false);
     });
 
     it("you should be able to receive data from the server and manipulate it", function(done) {

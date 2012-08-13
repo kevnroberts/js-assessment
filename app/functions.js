@@ -2,7 +2,7 @@ if (typeof define !== 'function') { var define = require('amdefine')(module); }
 
 define(function() {
   return {
-    argsAsArray : function(arr) {
+    argsAsArray : function(fn, arr) {
         var sayIt = function(greeting, name, punctuation) {
           return greeting + ', ' + name + (punctuation || '!');
         };
@@ -13,15 +13,15 @@ define(function() {
         return fn.apply(obj);
     },
 
-    functionFunction : function(hello) {
-        return function(world){
-            return hello + ", " + world;
+    functionFunction : function(str) {
+        return function(str2){
+            return str + ", " + str2;
         }
     },
 
-    partial : function(fn, greeting, name) {
-        return function(punctuation){
-            return fn(greeting, name, punctuation);
+    partial : function(fn, str1, str2) {
+        return function(str3){
+            return fn(str1, str2, str3);
         }
     },
 
@@ -33,13 +33,13 @@ define(function() {
         return sum;
     },
 
-    callIt : function() {
+    callIt : function(fn) {
         var args = Array.prototype.slice.apply(arguments);
         var fn = args.shift();
         fn.apply(this, args);
     },
 
-    curryIt : function() {
+    curryIt : function(fn) {
         var slice = Array.prototype.slice;
         var args = slice.apply(arguments);
         var func = args.shift();
@@ -48,12 +48,12 @@ define(function() {
         };
     },
 
-    makeClosures : function(arr, doSomeStuff) {
+    makeClosures : function(arr, fn) {
         var funcs = [];
         for(var i = 0; i < arr.length; i++){
             funcs.push(function(num){
                 return function(){
-                    return doSomeStuff(num);
+                    return fn(num);
                 }
             }(arr[i]));
         }

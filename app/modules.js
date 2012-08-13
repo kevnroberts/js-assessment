@@ -2,10 +2,10 @@ if (typeof define !== 'function') { var define = require('amdefine')(module); }
 
 define(function() {
   return {
-    createModule : function(greeting, name) {
+    createModule : function(str1, str2) {
     	return {
-    		name: name,
-    		greeting: greeting,
+    		name: str2,
+    		greeting: str1,
     		sayIt: function(){
     			return this.greeting + ", " + this.name;
     		}
