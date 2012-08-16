@@ -5,7 +5,7 @@ define([ 'jquery' ], function($) {
     async : function(value) {
     	return {
     		then: function(func){
-    			func(true);
+    			func(value);
     		}
     	};
     },
