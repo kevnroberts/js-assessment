@@ -3,10 +3,7 @@ if (typeof define !== 'function') { var define = require('amdefine')(module); }
 define(function() {
   return {
     argsAsArray : function(fn, arr) {
-        var sayIt = function(greeting, name, punctuation) {
-          return greeting + ', ' + name + (punctuation || '!');
-        };
-        return sayIt.apply(this, arr);
+        return fn.apply(this, arr);
     },
 
     speak : function(fn, obj) {
