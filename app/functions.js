@@ -36,6 +36,15 @@ define(function() {
         fn.apply(this, args);
     },
 
+    partialUsingArguments : function(fn) {
+        var slice = Array.prototype.slice;
+        var args = slice.apply(arguments);
+        var func = args.shift();
+        return function(){
+            return func.apply(null, args.concat(slice.apply(arguments)));
+        };
+    },
+
     curryIt : function(fn) {
         var slice = Array.prototype.slice;
         var args = slice.apply(arguments);

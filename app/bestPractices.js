@@ -16,9 +16,11 @@ define(function() {
     },
 
     functions : function(flag) {
-      function getValue(){
-        if(flag) return "a";
-        return "b";
+      var getValue;
+      if (flag) {
+        getValue = function() { return 'a'; };
+      } else {
+        getValue = function() { return 'b'; };
       }
 
       return getValue();

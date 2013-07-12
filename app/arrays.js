@@ -26,6 +26,10 @@ define(function() {
         return arr;
     },
 
+    removeWithoutCopy : function(arr, item) {
+        return this.remove(arr, item);
+    },
+
     append : function(arr, item) {
         arr.push(item);
         return arr;
@@ -33,6 +37,16 @@ define(function() {
 
     truncate : function(arr) {
         arr.pop();
+        return arr;
+    },
+
+    prepend : function(arr, item) {
+        arr.splice(0, 0, item);
+        return arr;
+    },
+
+    curtail : function(arr) {
+        arr.splice(0, 1);
         return arr;
     },
 
